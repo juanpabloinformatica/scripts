@@ -1,0 +1,16 @@
+[Unit]
+Description=Watcher for making automatic modifications in certains folders once some actions in those are triggered
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+type=simple
+Restart=always
+RestartSec=1
+User=@@USER@@
+ExecStart=/usr/bin/bash @@PATH_WATCHER@@
+WorkingDirectory=@@WORKING_DIRECTORY@@
+
+[Install]
+WantedBy=multi-user.target
+

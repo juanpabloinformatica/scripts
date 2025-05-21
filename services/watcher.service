@@ -1,0 +1,15 @@
+[Unit]
+Description=Watcher for making automatic modifications in certains folders once some actions in those are triggered
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=jppm
+ExecStart=/usr/bin/bash /home/jppm/Documents/scripts/watcher.sh
+WorkingDirectory=/home/jppm/Documents/scripts
+
+[Install]
+WantedBy=multi-user.target
