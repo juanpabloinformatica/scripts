@@ -2,10 +2,11 @@
 # set -x
 #Variables
 videoPath="$(find "$HOME" -maxdepth 1 -type d -name "*Videos" | grep -Pi ".*Videos$")"
-function _organize() {
-	nand2tetris=$(find "$HOME" -type d -name "*nand2tetris*" | grep -Pi "${videoPath}")
-	scripts=$(find "$HOME" -type d -name "*scripts*" | grep -Pi "${videoPath}")
-	other=$(find "$HOME" -type d -name "*other*" | grep -Pi "${videoPath}")
+function _organize_videos() {
+	echo "Organizing videos"
+	nand2tetris="$videoPath/nand2tetris"
+	scripts="$videoPath/scripts"
+	other="$videoPath/other"
 	mapfile -t files < <((find "$videoPath" -maxdepth 1 '!' -name "organize.sh" -type f -printf "%f\n"))
 	for file in "${files[@]}"; do
 		if grep -Piq ".*nand2tetris.*" <<< "$file"; then
@@ -18,6 +19,6 @@ function _organize() {
 	done
 }
 function main() {
-	_organize
+	_organize_videos
 }
 main
