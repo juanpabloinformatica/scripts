@@ -8,7 +8,7 @@ function _video_changes() {
 	# 		_organize_videos
 	# 	done
 	source ./video/videoOrganizer.sh
-	./_organize_videos
+	_organize_videos
 }
 function _download_changes() {
 	# not working yet as expected
@@ -20,7 +20,11 @@ function _download_changes() {
 	# 		_organize_downloads
 	# 	done
 	source ./downloads/dowloadOrganizer.sh
-	./_organize_downloads
+	_organize_downloads
+}
+function _bro_setup(){
+	source ./setupPc/xrandrRob.sh
+	_switch_monitors_position
 }
 function _detect_changes() {
 	# if [[ -z "$(which inotifywait)" ]]; then
@@ -31,6 +35,7 @@ function _detect_changes() {
 	# _download_changes &
 	_video_changes
 	_download_changes
+	_bro_setup
 }
 
 function main() {
