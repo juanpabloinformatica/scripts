@@ -6,7 +6,7 @@ function _organize_videos() {
 	echo "Organizing videos"
 	nand2tetris="$videoPath/nand2tetris"
 	scripts="$videoPath/scripts"
-	other="$videoPath/other"
+	others="$videoPath/others"
 	mapfile -t files < <((find "$videoPath" -maxdepth 1 '!' -name "organize.sh" -type f -printf "%f\n"))
 	for file in "${files[@]}"; do
 		if grep -Piq ".*nand2tetris.*" <<< "$file"; then
@@ -14,7 +14,7 @@ function _organize_videos() {
 		elif grep -Piq ".*script.*" <<< "$file"; then
 			mv "$videoPath/$file" "$scripts/$file"
 		else
-			mv "$videoPath/$file" "$other/$file"
+			mv "$videoPath/$file" "$others/$file"
 		fi
 	done
 }
