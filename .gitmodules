@@ -1,3 +1,0 @@
-[submodule "ld_preload_shim"]
-	path = ld_preload_shim
-	url = git@github.com:X4BNet/ld_preload_shim.git
