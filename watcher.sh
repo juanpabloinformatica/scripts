@@ -1,3 +1,4 @@
+#!/usr/bin/bash
 function _video_changes() {
 	# not working yet as expected
 	# source ./video/videoOrganizer.sh
@@ -7,7 +8,7 @@ function _video_changes() {
 	# 		echo "$changed"
 	# 		_organize_videos
 	# 	done
-	source ./video/videoOrganizer.sh
+	source "${SCRIPTS_PATH}/video/videoOrganizer.sh"
 	_organize_videos
 }
 function _download_changes() {
@@ -19,12 +20,16 @@ function _download_changes() {
 	# 		echo "$changed"
 	# 		_organize_downloads
 	# 	done
-	source ./downloads/dowloadOrganizer.sh
+	source "${SCRIPTS_PATH}/downloads/dowloadOrganizer.sh"
 	_organize_downloads
 }
-function _bro_setup(){
-	source ./setupPc/xrandrRob.sh
+function _bro_setup() {
+	source "${SCRIPTS_PATH}/setupPc/xrandrRob.sh"
 	_switch_monitors_position
+}
+function _work_setup() {
+	source "${SCRIPTS_PATH}/setupPc/xrandrWork.sh"
+	_work_init
 }
 function _detect_changes() {
 	# if [[ -z "$(which inotifywait)" ]]; then
@@ -33,12 +38,26 @@ function _detect_changes() {
 	# fi
 	# _video_changes &
 	# _download_changes &
+	source "${SCRIPTS_PATH}/variables.sh"
 	_video_changes
 	_download_changes
 	_bro_setup
+	_work_setup
 }
 
 function main() {
-	_detect_changes
+	if [[ $# -ge 1 ]]; then
+		while getopts ":s:" opt; do
+			case $opt in
+				s)
+					SCRIPTS_PATH="$OPTARG"
+					;;
+				*) ;;
+			esac
+		done
+		if [[ -n $SCRIPTS_PATH ]]; then
+			_detect_changes
+		fi
+	fi
 }
-main
+main "$@"
