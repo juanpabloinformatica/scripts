@@ -1,2 +1,4 @@
 variables.sh
 services
+venv
+video/client_secret.json
