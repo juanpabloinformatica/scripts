@@ -1,0 +1,95 @@
+#!/usr/bin/bash
+
+# https://unix.stackexchange.com/questions/267729/how-can-i-print-a-variable-with-padded-center-alignment
+#
+function center() {
+  termwidth="$(tput cols)"
+  padding="$(printf '%0.1s' \ {1..500})"
+
+  #hide cursor
+  printf '%*.*s %s %*.*s\n' 0 "$(((termwidth - 2 - ${#1}) / 2))" "$padding" "$1" 0 "$(((termwidth - 1 - ${#1}) / 2))" "$padding"
+}
+function make_beep() {
+  for i in $(seq 3); do
+    paplay --playback --volume=65536 --file-format=oga \
+      /usr/share/sounds/freedesktop/stereo/bell.oga
+  done
+}
+function get_time_to_seconds() {
+  result_time_seconds+=$(($1 * 3600 + $2 * 60 + $3))
+  echo "${result_time_seconds}"
+}
+function print_timer() {
+
+  clear
+  printf "\n\n\n\n\n\n\n\n"
+  center "$4"
+  printf "\n"
+  center "${hh}:${mm}:${ss}"
+}
+function set_timer() {
+
+  #Hide cursor
+  printf "\e[?25l"
+
+  time_to_seconds=$(get_time_to_seconds "$1" "$2" "$3")
+  hh=0
+  mm=0
+  ss=0
+  for s in $(seq ${time_to_seconds}); do
+    sleep 1
+    if ((ss <= 59)); then
+      ss=$((ss + 1))
+    else
+      ss=0
+      mm=$((mm + 1))
+      if ! ((mm <= 59)); then
+        mm=0
+        hh=$((hh + 1))
+      fi
+    fi
+    print_timer
+  done
+  make_beep
+  #Renable cursor
+  printf "\e[?25h"
+
+}
+function keep_going() {
+  printf "here"
+  read -p "Continue: 0 -> no\n 1 -> yes" still
+  if [[ ${still} =~ "1" ]]; then
+    read -p "ss: " ss
+    read -p "mm: " mm
+    read -p "hh: " hh
+    set_timer ${hh} ${mm} ${hh}
+  else
+    return 0
+  fi
+
+}
+function main() {
+  while getopts ":h:m:s:t:" o; do
+    case "${o}" in
+    h)
+      hh=${OPTARG}
+      ;;
+    m)
+      mm=${OPTARG}
+      ;;
+    s)
+      ss=${OPTARG}
+      ;;
+    t)
+      tt=${OPTARG}
+      ;;
+    esac
+  done
+  shift $((OPTIND - 1))
+  if [[ ! -z $hh && ! -z $mm && ! -z $ss ]]; then
+    set_timer ${hh} ${mm} ${ss} ${tt}
+  else
+    center "Not passed time correctly"
+  fi
+}
+main $@
