@@ -31,6 +31,9 @@ function _work_setup() {
 	source "${SCRIPTS_PATH}/setupPc/xrandrWork.sh"
 	_work_init
 }
+function _upload_videos() {
+	dunstify "Youtube videos" "Don't forget to upload videos"
+}
 function _detect_changes() {
 	# if [[ -z "$(which inotifywait)" ]]; then
 	# 	echo -e "Not installed\nInstall inotify-tools\nsudo pacman -Syu inotify-tools"
@@ -43,6 +46,7 @@ function _detect_changes() {
 	_download_changes
 	_bro_setup
 	_work_setup
+	_upload_videos
 }
 
 function main() {
